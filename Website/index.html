@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Improved GridApp</title>
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+        
+    <script type="text/javascript" src="js/worldMap.js"></script>
+    <script type="text/javascript" src="js/collectRecordInfo.js"></script>
+    <script type="text/javascript" src='js/buildCharts.js'></script>
+</head>
+
+<body>
+
+<p>
+Entry point to ocean analytics using ICOADS R2.5 Monthly Summary Data. <br><br>
+
+To examine information for a  2 x 2 grid, enter Latitude and Longitude below. <br>
+You can click the map, use the sliders, or enter latitude/longitude directly. <br><br>
+</p>
+
+<p>
+<table>
+    <tr>
+        <td><canvas id="world" onclick="canvasPostionUpdate()" width="650" height="431" style="border:1px solid #000000;">Your browser does not support canvas!</canvas></td>
+        <td><div id="latSlider" style="height:431px;"></div></td>
+    </tr>
+    <tr>
+        <td><div id="longSlider" style="width:650px;"></td>
+        <td></td>
+    </tr>
+</table>
+</p>
+    
+<p>
+<table>
+    <tr>
+        <td style="text-align:center;">Geo Location</td>
+        <td><input type="text" name="lat"  id="lat"  value="0" onchange="varCheck('lat')"  style="text-align:center;"/></td>
+        <td><input type="text" name="long" id="long" value="0" onchange="varCheck('long')" style="text-align:center;"/></td>
+        <td><button type="button" onclick="updateCharts()">Retrieve Records</button></td>
+    </tr>
+    <tr>
+        <td style="text-align:center;"></td>
+        <td style="text-align:center;">Latitude</td>
+        <td style="text-align:center;">Longitude</td>
+        <td style="text-align:center;"></td>
+    </tr>
+</table>
+</p>
+
+<p id="serverResponse"></p>
+
+<br><br>
+
+<div id="airtemp" style="width: 600px; height: 400px;"></div>
+
+<br><br>
+
+<div id="seatemp" style="width: 600px; height: 400px;"></div>
+
+<br><br>
+
+<div id="specifichumidity" style="width: 600px; height: 400px;"></div>
+
+<br><br>
+
+<div id="relativehumidity" style="width: 600px; height: 400px;"></div>
+
+<br><br>
+
+<br><br>
+
+
+<script>
+    // Load Charts
+    google.load("visualization", "1", {packages:["corechart"]});
+    google.setOnLoadCallback(initCharts);
+</script>
+
+</body>
+</html>

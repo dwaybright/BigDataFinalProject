@@ -1,0 +1,36 @@
+%%% Using Amazon EMR to load files from S3 bucket to DyanmoDB %%%
+%%% Due to lag in pushing data into DynamoDB, its better to drop split size dramatically.  %%%
+%%% This improves IO throughput.  The best I achieved was about 40 units of write. %%%
+
+set hive.base.inputformat=org.apache.hadoop.hive.ql.io.HiveInputFormat;
+set mapred.min.split.size=20000;
+set mapred.max.split.size=32000;
+
+CREATE EXTERNAL TABLE IF NOT EXISTS newRecord (
+UniqueID bigint,
+Date string,
+Latitude double,
+Longitude double,
+Group string,
+Year bigint,
+Month bigint,
+Record string 
+)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+LOCATION 's3://path/to/sourceCSVinputfiles/';
+
+CREATE EXTERNAL TABLE IF NOT EXISTS toDynamo (
+UniqueID bigint,
+Date string,
+Latitude double,
+Longitude double,
+Group string,
+Year bigint,
+Month bigint,
+Record string 
+)
+STORED BY 'org.apache.hadoop.hive.dynamodb.DynamoDBStorageHandler' 
+TBLPROPERTIES ("dynamodb.table.name" = "MonthlySummaries", 
+"dynamodb.column.mapping" = "UniqueID:UniqueID,Date:Date,Latitude:Latitude,Longitude:Longitude,Group:Group,Year:Year,Month:Month,Record:Record");  
+                    
+INSERT OVERWRITE TABLE toDynamo SELECT * FROM newRecord;
